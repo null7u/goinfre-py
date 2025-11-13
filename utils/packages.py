@@ -1,16 +1,21 @@
-
+from pkgs import Bat
 
 
 
 global SUPPR_PACKAGES
 # supported package.
-SUPPR_PACKAGES = {
-    "uv"    : "https://github.com/astral-sh/uv",
-    "go"    : "https://github.com/golang/go",
-    "nvim"  : "hthttps://github.com/neovim/neovim/",
-    "bat"   : "hthttps://github.com/sharkdp/bat",
-    "lsd"   : "hthttps://github.com/lsd-rs/lsd",
-}
+SUPPR_PACKAGES = [
+    Bat(),
+]
+
+SUPPR_PACKAGES = {p.name:p for p in SUPPR_PACKAGES}
+# = {
+#     "uv"    : "https://github.com/astral-sh/uv",
+#     "go"    : "https://github.com/golang/go",
+#     "nvim"  : "hthttps://github.com/neovim/neovim/",
+#     "bat"   : "hthttps://github.com/sharkdp/bat",
+#     "lsd"   : "hthttps://github.com/lsd-rs/lsd",
+# }
 
 
 
@@ -27,6 +32,6 @@ def packages_exists(packages:list[str]) -> tuple[bool, str]:
 
 def list_available_packages()->None:
     # package name, package website or repo
-    for pk_name, pk_url in SUPPR_PACKAGES.items():
-        print(pk_name, pk_url, sep="\t")
+    for pk_name, pkg in SUPPR_PACKAGES.items():
+        print(pk_name, pkg.project_url, sep="\t")
 

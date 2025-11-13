@@ -11,6 +11,11 @@ if len(sys.argv) <= 1:
 cmd_args = [_.lower() for _ in sys.argv[2:]]
 cmd = sys.argv[1].lower()
 
+def download_test(packgs:list[str]) -> None:
+    packgs = (utils.SUPPR_PACKAGES[p] for p in packgs)
+    for p in packgs:
+        p.download()
+
 
 match cmd:
     case "list":
@@ -20,6 +25,7 @@ match cmd:
         if not all_pkgs_exist:
             print(err)
             exit(1)
+        download_test(cmd_args)
         #download_packages(cmd_args)
     case _:
         print("command does not exists;")
