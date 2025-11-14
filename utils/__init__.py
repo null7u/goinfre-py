@@ -1,2 +1,2 @@
-from .packages import *
-from . import github
+from .         import github
+from .         import path as paths
