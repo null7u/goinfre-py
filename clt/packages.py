@@ -1,4 +1,4 @@
-from pkgs import Bat
+from pkgs import *
 
 
 
@@ -6,6 +6,7 @@ global SUPPR_PACKAGES
 # supported package.
 SUPPR_PACKAGES = [
     Bat(),
+    Lsd(),
 ]
 
 SUPPR_PACKAGES = {p.name:p for p in SUPPR_PACKAGES}
