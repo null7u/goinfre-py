@@ -16,6 +16,9 @@ class Bat(Pkg):
         self.name        = "bat"
         self.project_url = "https://github.com/sharkdp/bat"
         self.repo        = "sharkdp/bat"
+        self.bin_files   = ["bat",]
+
+        self.unpacking_method = lambda : PkgInstall.unpack_copy_bin(self.archive_name, self.bin_files)
 
 
     @property

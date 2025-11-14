@@ -17,7 +17,7 @@ class Pkg:
             paths.tmp + f"/{self.archive_name}",
             self.download_url, 
         )
-        #self.unpacking_method()
+        self.unpacking_method()
 
     def _version_github(self) -> str:
         if not self._version:

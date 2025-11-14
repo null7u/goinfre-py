@@ -1,1 +1,1 @@
-from .bat import Bat, Pkg
+from .bat import Bat
