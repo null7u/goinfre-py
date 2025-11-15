@@ -1,6 +1,9 @@
 import requests as req
 import tarfile
 import shutil
+import subprocess
+import lzma
+from os    import symlink, path, listdir
 from utils import paths
 
 
@@ -15,15 +18,29 @@ class PkgInstall:
                     file.write(chunk)
 
 
-    def unpack_copy_bin(archive_name:str, bin_files:list[str]) -> None:
-        PkgInstall.unpack(archive_name)
-        PkgInstall.copy_bin(archive_name, bin_files)
+    def _unpack_tar_gz(archive_path:str) -> None:
+        tar = tarfile.open(archive_path, "r:gz")
+        tar.extractall(path=paths.tmp)
+        tar.close()
+
+
+    def _unpack_tar_xz(archive_path:str) -> None:
+        tar = tarfile.open(archive_path, "r:xz")
+        tar.extractall(path=paths.tmp)
+        tar.close()
 
 
     def unpack(archive_name:str) -> None:
-        tar = tarfile.open(paths.tmp + f"/{archive_name}", "r:gz")
-        tar.extractall(path=paths.tmp)
-        tar.close()
+        ar = paths.tmp + f"/{archive_name}"
+        if archive_name.endswith(".tar.gz"):
+            PkgInstall._unpack_tar_gz(ar)
+        elif archive_name.endswith(".xz"):
+            PkgInstall._unpack_tar_xz(ar)
+
+
+    def unpack_copy_bin(archive_name:str, bin_files:list[str]) -> None:
+        PkgInstall.unpack(archive_name)
+        PkgInstall.copy_bin(archive_name, bin_files)
 
 
     def copy_bin(archive_name:str, bin_files:tuple[str]) -> None:
@@ -32,3 +49,26 @@ class PkgInstall:
         for bin_f in bin_files:
             shutil.copy2(f"{path}/{bin_f}", paths.bin)
 
+    def link(name:str, bin_files:tuple[str]) -> None:
+        for bf in bin_files:
+            src    = f"{paths.bin_files}/{name}/{bf}"
+            output = f"{paths.bin}/{bf.split('/')[-1]}"
+            symlink(src, output)
+
+
+    # debian packages:
+    def debian(name:str, archive_name:str, bin_files:tuple[str]) -> None:
+        path = f"{paths.tmp}/{archive_name}"
+        PkgInstall.unpack_debian(path)
+        PkgInstall.unpack("data.tar.xz")
+        shutil.move(f"{paths.tmp}/usr", f"{paths.bin_files}/{name}")
+        PkgInstall.link_debian(name)
+
+    def unpack_debian(archive_path:str) -> None:
+        subprocess.run(['ar', 'x', archive_path], cwd=paths.tmp)
+
+
+    def link_debian(name:str) -> None:
+        bin_files = listdir(f"{paths.bin_files}/{name}/bin")
+        bin_files = (f"bin/{_}" for _ in bin_files)
+        PkgInstall.link(name, bin_files)
