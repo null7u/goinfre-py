@@ -7,6 +7,7 @@ global SUPPR_PACKAGES
 SUPPR_PACKAGES = [
     Bat(),
     Lsd(),
+    Uv(),
 ]
 
 SUPPR_PACKAGES = {p.name:p for p in SUPPR_PACKAGES}
