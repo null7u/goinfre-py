@@ -3,8 +3,9 @@ import tarfile
 import shutil
 import subprocess
 import lzma
-from os    import symlink, path, listdir
-from utils import paths
+from typing import Callable 
+from os         import symlink, path
+from utils      import paths
 
 
 
@@ -57,18 +58,15 @@ class PkgInstall:
 
 
     # debian packages:
-    def debian(name:str, archive_name:str, bin_files:tuple[str]) -> None:
+    def debian(name:str, archive_name:str, to_cpy:str, bin_list_gen:Callable) -> None:
         path = f"{paths.tmp}/{archive_name}"
         PkgInstall.unpack_debian(path)
         PkgInstall.unpack("data.tar.xz")
-        shutil.move(f"{paths.tmp}/usr", f"{paths.bin_files}/{name}")
-        PkgInstall.link_debian(name)
+        shutil.move(f"{paths.tmp}/{to_cpy}", f"{paths.bin_files}/{name}")
+        PkgInstall.link(name, bin_list_gen())
+
 
     def unpack_debian(archive_path:str) -> None:
         subprocess.run(['ar', 'x', archive_path], cwd=paths.tmp)
 
 
-    def link_debian(name:str) -> None:
-        bin_files = listdir(f"{paths.bin_files}/{name}/bin")
-        bin_files = (f"bin/{_}" for _ in bin_files)
-        PkgInstall.link(name, bin_files)

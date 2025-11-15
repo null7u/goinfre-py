@@ -8,6 +8,7 @@ SUPPR_PACKAGES = [
     Bat(),
     Lsd(),
     Uv(),
+    Obsidian(),
     # VirtualBox(),
 ]
 
