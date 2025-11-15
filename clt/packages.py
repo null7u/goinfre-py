@@ -8,6 +8,7 @@ SUPPR_PACKAGES = [
     Bat(),
     Lsd(),
     Uv(),
+    VirtualBox(),
 ]
 
 SUPPR_PACKAGES = {p.name:p for p in SUPPR_PACKAGES}
