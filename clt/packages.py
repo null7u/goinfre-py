@@ -10,6 +10,7 @@ SUPPR_PACKAGES = [
     Uv(),
     Obsidian(),
     # VirtualBox(),
+    Nvim(),
 ]
 
 SUPPR_PACKAGES = {p.name:p for p in SUPPR_PACKAGES}

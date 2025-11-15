@@ -27,8 +27,15 @@ class PkgInstall:
 
     def _unpack_tar_xz(archive_path:str) -> None:
         tar = tarfile.open(archive_path, "r:xz")
-        tar.extractall(path=paths.tmp)
-        tar.close()
+
+
+    def unpack_move_link(archive_name:str, name:str, bin_to_link:Callable) -> None:
+        PkgInstall.unpack(archive_name)
+        archive_name = archive_name.removesuffix(".tar.gz")
+        path = f"{paths.tmp}/{archive_name}"
+        shutil.move(path, f"{paths.bin_files}/{name}")
+        PkgInstall.link(name, bin_to_link())
+
 
 
     def unpack(archive_name:str) -> None:
